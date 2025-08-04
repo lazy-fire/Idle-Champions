@@ -5,7 +5,7 @@ class IC_CrusadersGameDataSet_Class extends SH_MemoryPointer
 {
     GetVersion()
     {
-        return "v2.1.0, 2023-03-18"
+        return "v2.1.1, 2025-08-03"
     }
     
     Refresh()
@@ -14,18 +14,19 @@ class IC_CrusadersGameDataSet_Class extends SH_MemoryPointer
         if (this.Is64Bit != _MemoryManager.is64Bit) ; Build structure one time. 
         {
             this.Is64Bit := _MemoryManager.is64bit
-            this.CrusadersGame := {}
-            this.CrusadersGame.Defs := {}
-            this.CrusadersGame.Defs.CrusadersGameDataSet := new GameObjectStructure( this.StructureOffsets )
-            this.CrusadersGame.Defs.CrusadersGameDataSet.BasePtr := this
-            this.CrusadersGame.Defs.CrusadersGameDataSet.Is64Bit := _MemoryManager.is64bit
-            if(!_MemoryManager.is64bit)
+            if (this.CrusadersGame == "")
             {
-                #include *i %A_LineFile%\..\Imports\IC_CrusadersGameDataSet32_Import.ahk
+                this.CrusadersGame := {}
+                this.CrusadersGame.Defs := {}
+                this.CrusadersGame.Defs.CrusadersGameDataSet := new GameObjectStructure( this.StructureOffsets)
+                this.CrusadersGame.Defs.CrusadersGameDataSet.BasePtr := new SH_BasePtr(this.BaseAddress, this.ModuleOffset, this.StructureOffsets)
+                this.CrusadersGame.Defs.CrusadersGameDataSet.Is64Bit := _MemoryManager.is64bit
+                #include *i %A_LineFile%\..\Imports\IC_CrusadersGameDataSet64_Import.ahk
             }
             else
             {
-                #include *i %A_LineFile%\..\Imports\IC_CrusadersGameDataSet64_Import.ahk
+                this.CrusadersGame.Defs.CrusadersGameDataSet.BasePtr := new SH_BasePtr(this.BaseAddress, this.ModuleOffset, this.StructureOffsets)
+                this.CrusadersGame.Defs.CrusadersGameDataSet.ResetBasePtr(this.CrusadersGame.Defs.CrusadersGameDataSet)
             }
         }
     }
